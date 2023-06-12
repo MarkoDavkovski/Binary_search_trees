@@ -43,7 +43,7 @@ const Tree = (arr) => {
 		if (x < node.data) {
 			node.left = deleteNode(x, node.left);
 		} else if (x > node.data) node.right = deleteNode(x, node.right);
-		else if (x === node.data) {
+		else if (x == node.data) {
 			if (node.left === null && node.right === null) return null;
 
 			//Node with one child
@@ -64,5 +64,32 @@ const Tree = (arr) => {
 			node = node.left;
 		}
 		return minVal;
+	}
+
+	//Find the node in the tree with the value of x
+	function find(x, node = root) {
+		if (x == node.data) return node;
+		else if (x < node.data) return find(x, node.left);
+		else if (x > node.data) return find(x, node.right);
+		else {
+			console.log(`Number ${x} does not exist in the tree`);
+			return null;
+		}
+	}
+
+	//LevelOrder traversal
+	function levelOrder(node = root) {
+		if (node === null) return node;
+		let result = [],
+			que = [],
+			res;
+		que.push(node);
+		while (que.length > 0) {
+			curr = que.shift();
+			result.push(curr);
+			if (curr.left !== null) que.push(curr.left);
+			if (curr.right !== null) que.push(curr.right);
+		}
+		return result;
 	}
 };
