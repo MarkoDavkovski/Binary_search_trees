@@ -11,7 +11,7 @@ const Tree = (arr) => {
 	const leftID = 0;
 	const rightID = sortedArr.length - 1;
 
-	const root = buildTree(sortedArr, leftID, rightID);
+	let root = buildTree(sortedArr, leftID, rightID);
 
 	//Build a balanced BST
 	function buildTree(arr, l, r) {
@@ -19,7 +19,7 @@ const Tree = (arr) => {
 
 		let mid = Math.floor((l + r) / 2);
 
-		let root = Node(mid, l, r);
+		let root = Node(arr[mid]);
 
 		root.left = buildTree(arr, l, mid - 1);
 		root.right = buildTree(arr, mid + 1, r);
@@ -34,6 +34,7 @@ const Tree = (arr) => {
 			return node;
 		} else if (x < node.data) node.left = insert(x, node.left);
 		else node.right = insert(x, node.right);
+		return node;
 	}
 
 	//Remove node from the tree
@@ -86,7 +87,7 @@ const Tree = (arr) => {
 		que.push(node);
 		while (que.length > 0) {
 			curr = que.shift();
-			result.push(curr);
+			result.push(curr.data);
 			if (curr.left !== null) que.push(curr.left);
 			if (curr.right !== null) que.push(curr.right);
 		}
@@ -111,7 +112,7 @@ const Tree = (arr) => {
 		if (node === null) return node;
 		let result = [];
 		function traverse(node) {
-			arr.push(node.data);
+			result.push(node.data);
 			if (node.left !== null) traverse(node.left);
 			if (node.right !== null) traverse(node.right);
 		}
@@ -135,7 +136,7 @@ const Tree = (arr) => {
 	//Height of the node
 	function height(x) {
 		const foundNode = find(x);
-		if (foundNode) return nodeHeight(x);
+		if (foundNode) return nodeHeight(foundNode);
 		else console.error('Invalid node');
 	}
 	function nodeHeight(node) {
@@ -156,6 +157,28 @@ const Tree = (arr) => {
 		else if (x == node) return counter;
 	}
 
+	//Check if tree is balanced
+	function isBalanced(node = root) {
+		let diff,
+			left = height(node.left.data),
+			right = height(node.right.data);
+		if (left > right) diff = left - right;
+		else if (left < right) diff = right - left;
+		else return true;
+		if (diff <= 1) return true;
+		else return false;
+	}
+
+	//Rebalance the tree
+	function reBalance() {
+		if (!isBalanced()) {
+			let arr = inOrder();
+			root = buildTree(arr, 0, arr.length - 1);
+			return;
+		} else return `The tree is already balanced`;
+	}
+
+	//Function that prints the tree in a structured format
 	const prettyPrint = (node = root, prefix = '', isLeft = true) => {
 		if (node === null) {
 			return;
@@ -179,6 +202,32 @@ const Tree = (arr) => {
 		postOrder,
 		height,
 		depth,
+		isBalanced,
+		reBalance,
 		prettyPrint,
 	};
 };
+
+let a = [100, 200, 12, 1, 20, 300, 10, 22, 11, 13];
+
+let tree = Tree(a);
+tree.prettyPrint();
+tree.insert(131);
+tree.insert(121);
+tree.insert(111);
+tree.insert(113);
+tree.insert(112);
+tree.prettyPrint();
+// tree.deleteNode(333);
+// tree.prettyPrint();
+console.log(`levelorder traversal : ${tree.levelOrder()}`);
+console.log(`inorder traversal : ${tree.inOrder()}`);
+console.log(`preorder traversal : ${tree.preOrder()}`);
+console.log(`postorder traversal : ${tree.postOrder()}`);
+
+tree.height(13);
+console.log(`Depth of 300 is : ${tree.depth(300)}`);
+console.log(`Is this tree balanced : ${tree.isBalanced()}`);
+tree.reBalance();
+tree.prettyPrint();
+console.log(`Is this tree balanced now : ${tree.isBalanced()}`);
