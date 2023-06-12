@@ -13,7 +13,7 @@ const Tree = (arr) => {
 
 	const root = buildTree(sortedArr, leftID, rightID);
 
-	//Build balanced BST
+	//Build a balanced BST
 	function buildTree(arr, l, r) {
 		if (l > r) return null;
 
@@ -92,4 +92,93 @@ const Tree = (arr) => {
 		}
 		return result;
 	}
+
+	//Inorder traversal
+	function inOrder(node = root) {
+		if (node === null) return node;
+		let result = [];
+		function traverse(node) {
+			if (node.left !== null) traverse(node.left);
+			result.push(node.data);
+			if (node.right !== null) traverse(node.right);
+		}
+		traverse(node);
+		return result;
+	}
+
+	//Preorder traversal
+	function preOrder(node = root) {
+		if (node === null) return node;
+		let result = [];
+		function traverse(node) {
+			arr.push(node.data);
+			if (node.left !== null) traverse(node.left);
+			if (node.right !== null) traverse(node.right);
+		}
+		traverse(node);
+		return result;
+	}
+
+	//Postorder traversal
+	function postOrder(node = root) {
+		if (node === null) return node;
+		let result = [];
+		function traverse(node) {
+			if (node.left !== null) traverse(node.left);
+			if (node.right !== null) traverse(node.right);
+			result.push(node.data);
+		}
+		traverse(node);
+		return result;
+	}
+
+	//Height of the node
+	function height(x) {
+		const foundNode = find(x);
+		if (foundNode) return nodeHeight(x);
+		else console.error('Invalid node');
+	}
+	function nodeHeight(node) {
+		if (node === null) return -1;
+		return 1 + Math.max(nodeHeight(node.left), nodeHeight(node.right));
+	}
+
+	//Depth of the node
+	function depth(x) {
+		let foundNode = find(x);
+		if (foundNode) {
+			return nodeDepth(foundNode);
+		} else console.error('Invalid node');
+	}
+	function nodeDepth(x, node = root, counter = 0) {
+		if (x.data < node.data) return nodeDepth(x, node.left, counter + 1);
+		else if (x.data > node.data) return nodeDepth(x, node.right, counter + 1);
+		else if (x == node) return counter;
+	}
+
+	const prettyPrint = (node = root, prefix = '', isLeft = true) => {
+		if (node === null) {
+			return;
+		}
+		if (node.right !== null) {
+			prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
+		}
+		console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
+		if (node.left !== null) {
+			prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+		}
+	};
+
+	return {
+		insert,
+		deleteNode,
+		find,
+		levelOrder,
+		inOrder,
+		preOrder,
+		postOrder,
+		height,
+		depth,
+		prettyPrint,
+	};
 };
