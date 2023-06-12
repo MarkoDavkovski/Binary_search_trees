@@ -26,4 +26,43 @@ const Tree = (arr) => {
 
 		return root;
 	}
+
+	//Insert node into the tree
+	function insert(x, node = root) {
+		if (node === null) {
+			node = Node(x);
+			return node;
+		} else if (x < node.data) node.left = insert(x, node.left);
+		else node.right = insert(x, node.right);
+	}
+
+	//Remove node from the tree
+	function deleteNode(x, node = root) {
+		if (node === null) return node;
+
+		if (x < node.data) {
+			node.left = deleteNode(x, node.left);
+		} else if (x > node.data) node.right = deleteNode(x, node.right);
+		else if (x === node.data) {
+			if (node.left === null && node.right === null) return null;
+
+			//Node with one child
+			if (node.left === null) return node.right;
+			else if (node.right === null) return node.left;
+
+			node.data = minValue(node.right);
+
+			node.right = deleteNode(node.data, node.right);
+		}
+
+		return node;
+	}
+	function minValue(node) {
+		let minVal = node.data;
+		while (node.left != null) {
+			minVal = node.left.data;
+			node = node.left;
+		}
+		return minVal;
+	}
 };
